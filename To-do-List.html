@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do-List - Adicionar</title>
+    <style>
+
+        main > nav
+        {
+            background-color:black ;
+            list-style: none;
+        }
+
+        nav
+        {
+            background-color: black;
+        }
+
+        nav ul li
+        {
+            display: inline-block;
+            position: relative;
+        }
+
+        ul li a
+        {
+           display: block; 
+           padding: 20px 50px;
+           text-decoration: none;
+           text-align: center;
+           font-size: 110%;
+           color: white;
+           font-family: 'Times New Roman', Times, serif;
+        }
+
+        ul li a:hover{
+            background-color: rgb(0, 15, 100);
+        }
+
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Times New Roman', Times, serif;
+        outline: none;
+    }
+
+    h1{
+        text-align: center;
+        font-size: 300%;
+        font-family: 'Times New Roman', Times, serif;
+        color:black;
+    }
+
+    body{
+        background-color: rgb(0, 0, 54);
+    }
+
+    .container{
+        text-align: center;
+        background-color: rgb(206, 206, 206);
+        width: 50%;
+        margin:auto;
+        padding: 2%;
+        border-radius: 20px;
+        border: 5px solid black;
+    }
+
+
+    .input-task{
+        padding: 1.8%;
+        border-radius: 10px;
+        border: 2px black solid;
+        width: 70%;
+        font-size: 130%;
+    }
+
+    img{
+        height: 25px;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .task:hover img{
+opacity: 1;
+    }
+
+
+    .button-add-task{
+        border: 2px black solid;
+        border-radius: 5px;
+        padding: 1.5%;
+       background-color:rgb(0, 0, 54);
+       font-size: 130%;
+       color: white;
+       margin-left: 3%;
+       cursor: pointer;
+    }
+
+    .button-add-task:hover{
+        opacity: 0.8;
+    }
+
+    .button-add-task:active{
+        opacity: 0.6;
+    }
+
+    .list-tasks
+    {
+    width: 100%;
+    list-style: none;
+    font-size: 150%;
+    }
+
+    .task{
+        background-color: #f2f2f2;
+        box-shadow: 1px 4px 10px rgba(0,0,0,0.2);
+        display: flex;
+        height: 50px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1%;
+        border-radius: 10px;
+        margin: 5%;
+        cursor: pointer;
+    }
+
+    .done{
+        background-color: #8fac55;
+        text-decoration: line-through;
+    }
+
+    hr{
+        border: none;
+        color: black;
+        background-color: black;
+        height: 5px;
+        border-radius: 100px;
+        width: 80%;
+        margin: auto;
+    }
+
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html"> To Do List - Home</a></li>
+            <li><a href="To-do-List.html">Adicionar Tarefa</a> </li>
+        </ul>
+    </nav>
+<br> <br>
+    <div class="container">
+        <input class="input-task" type="text" placeholder="Escreva do que você quer lembrar...">
+        <button class="button-add-task">Adicionar</button>
+
+        <ul class="list-tasks">
+            <li class="task">
+                <img src="imagens/verificado.png" alt="Confirmar a tarefa">
+
+                <img src="imagens/lixo.png" alt="imagem-para-o-lixo"> 
+            </li>
+        </ul>
+    </div>
+
+<script>
+
+
+const button = document.querySelector('.button-add-task')
+const input = document.querySelector('.input-task')
+const listaCompleta = document.querySelector('.list-tasks')
+
+let minhaListaDeItens = []
+
+function adicionarNovaTarefa() {
+  minhaListaDeItens.push({
+    tarefa: input.value,
+    concluida: false,
+  })
+
+  input.value = ''
+
+  mostrarTarefas()
+}
+
+function mostrarTarefas() {
+  let novaLi = ''
+
+  // ['comprar café', 'estudar programação']
+
+  minhaListaDeItens.forEach((item, posicao) => {
+    novaLi =
+      novaLi +
+      `
+
+        <li class="task ${item.concluida && 'done'}">
+            <img src="imagens/verificado.png" alt="check-na-tarefa" onclick="concluirTarefa(${posicao})">
+            <p>${item.tarefa}</p>
+            <img src="imagens/lixo.png" alt="tarefa-para-o-lixo" onclick="deletarItem(${posicao})">
+        </li>
+        
+        `
+  })
+
+  listaCompleta.innerHTML = novaLi
+
+  localStorage.setItem('lista', JSON.stringify(minhaListaDeItens))
+}
+
+function concluirTarefa(posicao) {
+  minhaListaDeItens[posicao].concluida = !minhaListaDeItens[posicao].concluida
+
+  mostrarTarefas()
+}
+
+function deletarItem(posicao) {
+  minhaListaDeItens.splice(posicao, 1)
+
+  mostrarTarefas()
+}
+
+function recarregarTarefas() {
+  const tarefasDoLocalStorage = localStorage.getItem('lista')
+
+  if (tarefasDoLocalStorage) {
+    minhaListaDeItens = JSON.parse(tarefasDoLocalStorage)
+  }
+
+  mostrarTarefas()
+}
+
+recarregarTarefas()
+button.addEventListener('click', adicionarNovaTarefa)
+   
+</script>
+
+</body>
+</html>
